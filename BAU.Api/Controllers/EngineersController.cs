@@ -7,14 +7,15 @@ using System.Web.Http;
 
 namespace BAU.Api.Controllers
 {
-    public class Engineers : ApiController
+    public class EngineersController : ApiController
     {
-        //// GET api/<controller>
-        //public IEnumerable<Models.Engineer> Get()
-        //{
-        //    IEnumerable<Models.Engineer> res;
-        //    return res;
-        //}
+        // GET api/<controller>
+        public IEnumerable<Models.Engineer> Get()
+        {
+            BAU.Logic.Engineers obj = new BAU.Logic.Engineers();
+            IEnumerable<Models.Engineer> res = obj.getList();
+            return res;
+        }
 
         // GET api/<controller>/5
         public string Get(int id)

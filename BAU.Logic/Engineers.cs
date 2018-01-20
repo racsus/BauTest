@@ -8,12 +8,11 @@ namespace BAU.Logic
 {
     public class Engineers
     {
-        //public IEnumerable<Models.Engineer> getList()
-        //{
-        //    IEnumerable<Models.Engineer> res;
-
-        //    return res;
-        //}
+        public IEnumerable<Models.Engineer> getList()
+        {
+            BAU.Data.Engineers obj = new BAU.Data.Engineers();
+            return obj.getList();
+        }
 
     }
 }

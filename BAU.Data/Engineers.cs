@@ -8,5 +8,14 @@ namespace BAU.Data
 {
     public class Engineers
     {
+        public IEnumerable<Models.Engineer> getList()
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                db.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+                var res = db.Engineer.ToList();
+                return res;
+            }
+        }
     }
 }

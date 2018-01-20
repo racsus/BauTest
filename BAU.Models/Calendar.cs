@@ -16,6 +16,5 @@ namespace BAU.Models
         public int IdEngineer { get; set; }
         [Required(ErrorMessage = "Sorry! The shift is required! Good try! :)")]
         public int Shift { get; set; }
-        public int Test { get; set; }
     }
 }
