@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calendar.cs" />
+    <Compile Include="CalendarWithPaging.cs" />
     <Compile Include="Engineer.cs" />
     <Compile Include="EngineerWithPaging.cs" />
+    <Compile Include="Enumerables.cs" />
     <Compile Include="Pagination.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

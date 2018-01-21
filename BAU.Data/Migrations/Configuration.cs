@@ -13,8 +13,6 @@
             AutomaticMigrationsEnabled = true;
         }
 
-
-
         /// <summary>
         /// Default data
         /// </summary>

@@ -13,7 +13,7 @@ namespace BAU.Data
         /// Get all engineers. Carefull! Not recommended.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Models.Engineer> getList()
+        public List<Models.Engineer> getAll()
         {
             using (var context = new ApplicationDbContext())
             {
@@ -22,23 +22,43 @@ namespace BAU.Data
         }
 
         /// <summary>
-        /// Get engineers paginated
+        /// Get all engineers. Carefull! Not recommended.
         /// </summary>
-        /// <param name="page">Pagination data (page number, order, etc.)</param>
         /// <returns></returns>
-        public IEnumerable<Models.Engineer> getListPaginated(Models.Pagination page)
+        public Models.Engineer getById(int Id)
         {
-            IEnumerable<Models.Engineer> res = null;
+            Models.Engineer res = null;
             using (var context = new ApplicationDbContext())
             {
-                res = context.Engineer.OrderBy(u => u.Name)
-                    .Skip(page.pageNumber)
-                    .Take(page.pageSize)
-                    .ToList();
+                var query = (from ele in context.Engineer where ele.Id == Id select ele).ToList();
+                res = (from ele in context.Engineer where ele.Id == Id select ele).FirstOrDefault<Models.Engineer>();
             }
             return res;
         }
 
+        ///// <summary>
+        ///// Get engineers paginated
+        ///// </summary>
+        ///// <param name="page">Pagination data (page number, order, etc.)</param>
+        ///// <returns></returns>
+        //public IEnumerable<Models.Engineer> getListPaginated(Models.Pagination page)
+        //{
+        //    IEnumerable<Models.Engineer> res = null;
+        //    using (var context = new ApplicationDbContext())
+        //    {
+        //        res = context.Engineer.OrderBy(u => u.Name)
+        //            .Skip(page.pageNumber)
+        //            .Take(page.pageSize)
+        //            .ToList();
+        //    }
+        //    return res;
+        //}
+
+        /// <summary>
+        /// Get engineers paginated
+        /// </summary>
+        /// <param name="pageNumber">Index page</param>
+        /// <returns></returns>
         public Models.EngineerWithPaging getPaginated(int pageNumber)
         {
             Models.EngineerWithPaging res = null;
@@ -81,5 +101,25 @@ namespace BAU.Data
             }
             return res;
         }
+
+        /// <summary>
+        /// Delete all records (Only for testing)
+        /// </summary>
+        /// <returns></returns>
+        public int DeleteAll()
+        {
+            int res = 0;
+            using (var context = new ApplicationDbContext())
+            {
+                foreach (Models.Engineer ele in getAll())
+                {
+                    context.Engineer.Attach(ele);
+                    context.Engineer.Remove(ele);
+                    res = context.SaveChanges();
+                }                
+            }
+            return res;
+        }
+
     }
 }

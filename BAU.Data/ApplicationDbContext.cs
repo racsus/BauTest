@@ -10,9 +10,9 @@ namespace BAU.Data
     public class ApplicationDbContext: DbContext
     {
         public ApplicationDbContext()
-            :base("BAU")
+            :base("name=BAUConnection")
         {
-            //Database.SetInitializer(new EntitiesContextInitializer());
+            //this.Configuration.LazyLoadingEnabled = false;
         }
 
         public DbSet<Models.Engineer> Engineer { get; set; }
