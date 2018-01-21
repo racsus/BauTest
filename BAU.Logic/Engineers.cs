@@ -86,7 +86,7 @@ namespace BAU.Logic
             {
                 foreach (Models.Engineer ele in listUsedByDay)
                 {
-                    if (listAll.Contains(ele))
+                    if ((from tab in listAll where tab.Id == ele.Id select tab).Count() > 0)
                         listAll.Remove(listAll.Single(x => x.Id == ele.Id));
                 }
             }
@@ -96,7 +96,7 @@ namespace BAU.Logic
             {
                 foreach (Models.Engineer ele in listUsedByDayBefore)
                 {
-                    if (listAll.Contains(ele))
+                    if ((from tab in listAll where tab.Id == ele.Id select tab).Count() > 0)
                         listAll.Remove(listAll.Single(x => x.Id == ele.Id));
                 }
             }
@@ -106,7 +106,7 @@ namespace BAU.Logic
             {
                 foreach (Models.Engineer ele in listUsedCompleteDayTwoWeeksBefore)
                 {
-                    if (listAll.Contains(ele))
+                    if ((from tab in listAll where tab.Id == ele.Id select tab).Count() > 0)
                         listAll.Remove(listAll.Single(x => x.Id == ele.Id));
                 }
             }

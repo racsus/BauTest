@@ -7,11 +7,22 @@ using System.Web.Http;
 
 namespace BAU.Api.Controllers
 {
+    /// <summary>
+    /// API for "Support Wheel of Fate"
+    /// </summary>
     [AllowCrossSiteJson]
     public class CalendarController : ApiController
     {
+        /// <summary>
+        /// Pagination size for paginated data
+        /// </summary>
         public const int _PAGE_SIZE = 10;
 
+        /// <summary>
+        /// Get paginated calendar information.
+        /// </summary>
+        /// <param name="pageNumber">Page number (Pagination)</param>
+        /// <returns></returns>
         public HttpResponseMessage Get(int pageNumber = 1)
         {
             HttpResponseMessage response = null;
@@ -21,6 +32,10 @@ namespace BAU.Api.Controllers
             return response;
         }
 
+        /// <summary>
+        /// This method found an engineer that accomplish the 3 rules described in the task
+        /// </summary>
+        /// <returns></returns>
         [Route("api/Calendar/SetEngineer")]
         [HttpGet]
         public HttpResponseMessage SetEngineer()
