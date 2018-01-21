@@ -11,35 +11,32 @@ namespace BAU.Api.Controllers
     [AllowCrossSiteJson]
     public class EngineersController : ApiController
     {
-        //// GET api/<controller>
-        //public IEnumerable<Models.Engineer> Get()
-        //{
-        //    BAU.Logic.Engineers context = new BAU.Logic.Engineers();
-        //    IEnumerable<Models.Engineer> res = context.getList();
-        //    return res;
-        //}
-
-        //[Route("api/Engineers/GetPagination/{paginationObject}")]
-        //public IEnumerable<Models.Engineer> GetPagination(string paginationObject)
-        //{
-        //    paginationObject = @"{""pageNumber"": ""1"",""pageSize"": ""5"",""orderBy"": ""name"",""direction"": ""asc"", ""whereClause"": """"}";
-        //    Models.Pagination page = JsonConvert.DeserializeObject<Models.Pagination>(paginationObject);
-        //    BAU.Logic.Engineers context = new BAU.Logic.Engineers();
-        //    IEnumerable<Models.Engineer> res = context.getListPaginated(page);
-        //    return res;
-        //}
-
-            /// <summary>
-            /// Get engineers paginated
-            /// </summary>
-            /// <param name="pageNumber">Page number</param>
-            /// <returns></returns>
+        /// <summary>
+        /// Get engineers paginated
+        /// </summary>
+        /// <param name="pageNumber">Page number</param>
+        /// <returns></returns>
         public HttpResponseMessage Get(int pageNumber = 1)
         {
             HttpResponseMessage response = null;
             BAU.Logic.Engineers context = new BAU.Logic.Engineers();
             Models.EngineerWithPaging model = context.getPaginated(pageNumber);
             response = Request.CreateResponse(HttpStatusCode.OK, model);
+            return response;
+        }
+
+        /// <summary>
+        /// Get engineers without paginate
+        /// </summary>
+        /// <param name="pageNumber">Page number</param>
+        /// <returns></returns>
+        [Route("api/Engineers/GetAll")]
+        public HttpResponseMessage GetAll()
+        {
+            HttpResponseMessage response = null;
+            BAU.Logic.Engineers context = new BAU.Logic.Engineers();
+            List<Models.Engineer> res = context.getAll();
+            response = Request.CreateResponse(HttpStatusCode.OK, res);
             return response;
         }
 

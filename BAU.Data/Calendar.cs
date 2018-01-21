@@ -27,16 +27,16 @@ namespace BAU.Data
         /// </summary>
         /// <param name="pageNumber">Index page</param>
         /// <returns></returns>
-        public Models.CalendarWithPaging getPaginated(int pageNumber)
+        public Models.CalendarWithPaging getPaginated(int pageNumber, int limitPage)
         {
             Models.CalendarWithPaging res = null;
             int totalPage, totalRecord, pageSize;
-            pageSize = 5;
+            pageSize = limitPage;
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
-                totalRecord = context.Engineer.Count();
+                totalRecord = context.Calendar.Count();
                 totalPage = (totalRecord / pageSize) + ((totalRecord % pageSize) > 0 ? 1 : 0);
-                var record = (from a in context.Calendar
+                var record = (from a in context.Calendar.Include("EngineerAssigned")
                               orderby a.Date
                               select a).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                 res = new Models.CalendarWithPaging
@@ -186,7 +186,9 @@ namespace BAU.Data
                 using (var context = new ApplicationDbContext())
                 {
                     context.Calendar.Add(model);
-                    res = context.SaveChanges();
+                    context.Engineer.Attach(model.EngineerAssigned);
+                    context.SaveChanges();
+                    res = model.Id;
                 }
                 return res;
             }

@@ -22,3 +22,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Sets the background image for the wheel */
+td.the_wheel {
+    background-image: url(Images/wheel_back.png);
+    background-position: center;
+    background-repeat: none;
+}

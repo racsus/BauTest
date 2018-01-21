@@ -4,95 +4,240 @@
 }
 
 <h2>Calendar</h2>
-<button id="btnEngineer" type="button" class="btn btn-success">New assignation</button>
-<div id="updatePanel">
+
+<div class="row">
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">New assignation</button>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Engineer random selection</h4>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                                        <canvas id="canvas" width="434" height="434">
+                                            <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                                        </canvas>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </center>
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnShoot" type="button" class="btn btn-primary" onclick="javascript: startSpin();">Shoot</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
 </div>
+<br />
+<div class="row">
+    <div id="updatePanel">
+
+    </div>
+</div>
+
 
 @section Scripts{
+    <script src='~/Scripts/Winwheel.min.js'></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
     <script>
-        $("#btnEngineer").click(function () {
+        var currentPage = 1;
+
+        function refreshGrid() {
+            var pageNo = parseInt($(this).html());
+            currentPage = pageNo;
+            fetchData(currentPage);
+        }
+
+        //Fetch Data
+        function fetchData(pageNo) {
+            //Create loading panel
+            var $loading = "<div class='loading'>Please wait...</div>";
+            $('#updatePanel').prepend($loading);
+            //Ajax call for fetch data from WEB Api
             $.ajax({
-                url: 'http://localhost:52057/api/Calendar/SetEngineer',
+                url: 'http://localhost:52057/api/Calendar',
                 type: 'GET',
+                data: { pageNumber: pageNo },
                 dataType: 'json',
                 success: function (data) {
-    
+                    // generate html and Load data
+                    var $table = $('<table/>').addClass('table table-responsive table-striped table-bordered');
+                    var $header = $('<thead/>').html('<tr><th>Date</th><th>Engineer</th><th>Shift</th></tr>');
+                    $table.append($header);
+
+                    //table  body
+                    $.each(data.Calendars, function (i, model) {
+                        var shiftType = "Morning";
+                        var date = new Date(model.Date);
+                        if (model.Shift == 2)
+                            shiftType = "Afternoon";
+                        var $row = $('<tr/>');
+                        //$row.append($('<td/>').html(model.Id));
+                        $row.append($('<td/>').html((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()));
+                        $row.append($('<td/>').html(model.EngineerAssigned.Name));
+                        $row.append($('<td/>').html(shiftType));
+                        $table.append($row);
+                    });
+
+                    //table footer (for paging content)
+                    var totalPage = parseInt(data.TotalPage);
+                    var $footer = $('<tr/>');
+                    var $footerTD = $('<td/>').attr('colspan', 4).addClass('footerContent');
+
+                    if (totalPage > 0) {
+                        for (var i = 1; i <= totalPage; i++) {
+                            var $page = $('<span/>').addClass((i == currentPage) ? "current" : "");
+                            $page.html((i == currentPage) ? i : "<a href='#'>" + i + "</a>");
+                            $footerTD.append($page);
+                        }
+                        $footer.append($footerTD);
+                    }
+                    $table.append($footer);
+
+                    $('#updatePanel').html($table);
                 },
                 error: function () {
                     alert('Error! Please try again.');
                 }
             }).done(function () {
                 //remove loading panel after ajax call complete
-                $loading.remove();
+                //$loading.remove();
             });
-        });
+        }
 
-        $(document).ready(function () {
-            var currentPage = 1;
+        $(document).ready(function () {            
             //Load data for page 1 first time
             fetchData(1);
+
             // Paging
             $('#updatePanel').on('click', '.footerContent a', function (e) {
                 e.preventDefault();
-                var pageNo = parseInt($(this).html());
-                currentPage = pageNo;
-                fetchData(currentPage);
+                refreshGrid();
             });
+        });
+        
 
-            //Fetch Data
-            function fetchData(pageNo) {
-                //Create loading panel
-                var $loading = "<div class='loading'>Please wait...</div>";
-                $('#updatePanel').prepend($loading);
-                //Ajax call for fetch data from WEB Api
+        var theWheel;
+        var engineersColors = [];
+        var listColors = ["#ff0000", "#800000", "#C0C0C0", "#FFFF00", "#808000", "#008000", "#008080", "#00FFFF", "#800080", "#FF00FF", "#00FF00"];
+
+        $.ajax({
+            url: 'http://localhost:52057/api/Engineers/GetAll',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                //table  body
+                $.each(data, function (i, model) {
+                    var selectedColor = listColors[Math.floor(Math.random() * listColors.length)];
+                    engineersColors.push({ fillStyle: selectedColor, text: model.Name });
+                });
+            },
+            error: function () {
+                alert('Error! Please try again.');
+            }
+        }).done(function () {
+            // Create new wheel object specifying the parameters at creation time.
+            theWheel = new Winwheel({
+                'numSegments': engineersColors.length,     // Specify number of segments.
+                'outerRadius': 212,   // Set outer radius so wheel fits inside the background.
+                'textFontSize': 20,    // Set font size as desired.
+                'segments': engineersColors,      // Define segments including colour and text.,
+                'animation':           // Specify the animation to use.
+                {
+                    'type': 'spinToStop',
+                    'duration': 5,     // Duration in seconds.
+                    'spins': 8,     // Number of complete spins.
+                    'callbackFinished': alertPrize
+                }
+            });
+        });
+
+
+
+        // Vars used by the code in this page to do power controls.
+        var wheelPower = 0;
+        var wheelSpinning = false;
+
+        // -------------------------------------------------------
+        // Click handler for spin button.
+        // -------------------------------------------------------
+        function startSpin() {
+            resetWheel();
+
+            // Ensure that spinning can't be clicked again while already running.
+            if (wheelSpinning == false) {
+                $("#BtnShoot").button('loading');
+                var numberSelected;
                 $.ajax({
-                    url: 'http://localhost:52057/api/Calendar',
+                    url: 'http://localhost:52057/api/Calendar/SetEngineer',
                     type: 'GET',
-                    data: { pageNumber: pageNo },
                     dataType: 'json',
                     success: function (data) {
-                        // generate html and Load data
-                        var $table = $('<table/>').addClass('table table-responsive table-striped table-bordered');
-                        var $header = $('<thead/>').html('<tr><th>Id</th><th>Date</th><th>Engineer</th><th>Shift</th></tr>');
-                        $table.append($header);
-
-                        //table  body
-                        $.each(data.Engineers, function (i, model) {
-                            var $row = $('<tr/>');
-                            $row.append($('<td/>').html(model.Id));
-                            $row.append($('<td/>').html(model.Date));
-                            $row.append($('<td/>').html(model.IdEngineer));
-                            $row.append($('<td/>').html(model.Shift));
-                            $table.append($row);
-                        });
-
-                        //table footer (for paging content)
-                        var totalPage = parseInt(data.TotalPage);
-                        var $footer = $('<tr/>');
-                        var $footerTD = $('<td/>').attr('colspan', 4).addClass('footerContent');
-
-                        if (totalPage > 0) {
-                            for (var i = 1; i <= totalPage; i++) {
-                                var $page = $('<span/>').addClass((i == currentPage) ? "current" : "");
-                                $page.html((i == currentPage) ? i : "<a href='#'>" + i + "</a>");
-                                $footerTD.append($page);
-                            }
-                            $footer.append($footerTD);
-                        }
-                        $table.append($footer);
-
-                        $('#updatePanel').html($table);
+                        numberSelected = data;
                     },
                     error: function () {
                         alert('Error! Please try again.');
                     }
                 }).done(function () {
-                    //remove loading panel after ajax call complete
-                    $loading.remove();
+                    // Based on the power level selected adjust the number of spins for the wheel, the more times is has
+                    // to rotate with the duration of the animation the quicker the wheel spins.
+                    theWheel.animation.spins = 15;
+
+                    //Defini the engineer selected
+                    var stopAt = theWheel.getRandomForSegment(numberSelected);
+                    theWheel.animation.stopAngle = stopAt;
+
+                    // Begin the spin animation by calling startAnimation on the wheel object.
+                    theWheel.startAnimation();
+
+                    // Set to true so that power can't be changed and spin button re-enabled during
+                    // the current animation. The user will have to reset before spinning again.
+                    wheelSpinning = true;
                 });
             }
-        });
+        }
+
+        // -------------------------------------------------------
+        // Function for reset button.
+        // -------------------------------------------------------
+        function resetWheel() {
+            theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+            theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+            theWheel.draw();                // Call draw to render changes to the wheel.
+
+            wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+        }
+
+        // -------------------------------------------------------
+        // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters
+        // note the indicated segment is passed in as a parmeter as 99% of the time you will want to know this to inform the user of their prize.
+        // -------------------------------------------------------
+        function alertPrize(indicatedSegment) {
+            // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
+            //alert("Engineer selected: " + indicatedSegment.text);
+            $("#BtnShoot").button('reset');
+            //$('#myModal').modal('hide');
+            //resetWheel();            
+            refreshGrid();
+        }
     </script>
 }
 

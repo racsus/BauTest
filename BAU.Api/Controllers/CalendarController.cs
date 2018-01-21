@@ -10,17 +10,13 @@ namespace BAU.Api.Controllers
     [AllowCrossSiteJson]
     public class CalendarController : ApiController
     {
-        //// GET: api/Calendar
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        public const int _PAGE_SIZE = 10;
 
         public HttpResponseMessage Get(int pageNumber = 1)
         {
             HttpResponseMessage response = null;
             BAU.Logic.Calendar context = new BAU.Logic.Calendar();
-            Models.CalendarWithPaging model = context.getPaginated(pageNumber);
+            Models.CalendarWithPaging model = context.getPaginated(pageNumber, _PAGE_SIZE);
             response = Request.CreateResponse(HttpStatusCode.OK, model);
             return response;
         }
@@ -35,26 +31,5 @@ namespace BAU.Api.Controllers
             response = Request.CreateResponse(HttpStatusCode.OK, res);
             return response;
         }
-
-        //// GET: api/Calendar/5
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //// POST: api/Calendar
-        //public void Post([FromBody]string value)
-        //{
-        //}
-
-        //// PUT: api/Calendar/5
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE: api/Calendar/5
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

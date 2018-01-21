@@ -19,10 +19,10 @@ namespace BAU.Logic
             return context.getAll();
         }
 
-        public Models.CalendarWithPaging getPaginated(int pageNumber)
+        public Models.CalendarWithPaging getPaginated(int pageNumber, int pageSize)
         {
             BAU.Data.Calendar context = new BAU.Data.Calendar();
-            return context.getPaginated(pageNumber);
+            return context.getPaginated(pageNumber, pageSize);
         }
 
         /// <summary>
@@ -136,16 +136,33 @@ namespace BAU.Logic
         /// <returns></returns>
         public int InsertRandomEngineer()
         {
+            int res = 0;
+            int idCalendar = 0;
+            Engineers contextEngineers = new Engineers();
             Models.Calendar calendar = null;
+
             DateTime firstFreeDate = getFirstFreeDate();
             int currentShift = (int)getFreeShiftDay(firstFreeDate); //Get free shift in specified date
             if (currentShift > 0)
             {
-                Engineers contextEngineers = new Engineers();
                 Models.Engineer engineerSelected = contextEngineers.getRandomEngineer(firstFreeDate);
                 calendar = new Models.Calendar(firstFreeDate, engineerSelected, currentShift);
             }
-            return Insert(calendar);
+            idCalendar = Insert(calendar);
+
+            if (idCalendar > 0)
+            {
+                //We find the position of the selecte engineer in the list (For Selection Wheel Client)
+                List<Models.Engineer> listEngineers = contextEngineers.getAll();
+                foreach (Models.Engineer ele in listEngineers)
+                {
+                    if (ele.Id == calendar.EngineerAssigned.Id)
+                        return (res+1);
+                    res++;
+                }
+            }
+
+            return res;
         }
 
         public int Insert(Models.Calendar model)
