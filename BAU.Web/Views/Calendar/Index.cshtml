@@ -73,7 +73,7 @@
             $('#updatePanel').prepend($loading);
             //Ajax call for fetch data from WEB Api
             $.ajax({
-                url: 'http://localhost:52057/api/Calendar',
+                url: 'http://bauapioscar.azurewebsites.net/api/Calendar',
                 type: 'GET',
                 data: { pageNumber: pageNo },
                 dataType: 'json',
@@ -140,7 +140,7 @@
         var listColors = ["#ff0000", "#800000", "#C0C0C0", "#FFFF00", "#808000", "#008000", "#008080", "#00FFFF", "#800080", "#FF00FF", "#00FF00"];
 
         $.ajax({
-            url: 'http://localhost:52057/api/Engineers/GetAll',
+            url: 'http://bauapioscar.azurewebsites.net/api/Engineers/GetAll',
             type: 'GET',
             dataType: 'json',
             success: function (data) {
@@ -187,7 +187,7 @@
                 $("#BtnShoot").button('loading');
                 var numberSelected;
                 $.ajax({
-                    url: 'http://localhost:52057/api/Calendar/SetEngineer',
+                    url: 'http://bauapioscar.azurewebsites.net/api/Calendar/SetEngineer',
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {

@@ -41,10 +41,21 @@ namespace BAU.Logic
         /// </summary>
         /// <param name="date">Specific date</param>
         /// <returns></returns>
-        public IEnumerable<Models.Engineer> getBetweenDates(DateTime dateIni, DateTime dateFin)
+        public IEnumerable<Models.Engineer> getEngineersBetweenDates(DateTime dateIni, DateTime dateFin)
         {
             BAU.Data.Calendar context = new BAU.Data.Calendar();
-            return context.getBetweenDates(dateIni, dateFin);
+            return context.getEngineersBetweenDates(dateIni, dateFin);
+        }
+
+        /// <summary>
+        /// Get engineers used in a specific day
+        /// </summary>
+        /// <param name="date">Specific date</param>
+        /// <returns></returns>
+        public IEnumerable<Models.Calendar> getCalendarBetweenDates(DateTime dateIni, DateTime dateFin)
+        {
+            BAU.Data.Calendar context = new BAU.Data.Calendar();
+            return context.getCalendarBetweenDates(dateIni, dateFin);
         }
 
         /// <summary>
@@ -59,8 +70,8 @@ namespace BAU.Logic
 
             //Get last monday
             DateTime monday = GetFirstDayOfWeek(date.AddDays(-7));
-            var data = getBetweenDates(monday, date);
-            foreach (var line in data.GroupBy(info => info.Id)
+            var data = getCalendarBetweenDates(monday, date);
+            foreach (var line in data.GroupBy(info => info.EngineerAssigned.Id)
                         .Select(group => new {
                             Id = group.Key,
                             Count = group.Count()

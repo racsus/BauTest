@@ -81,6 +81,9 @@ namespace BAU.LogicTests
                 actValue += 1;
             Assert.AreEqual(expectedValue, actValue);
 
+            //Initialize test value
+            ConnectionTools.initializeDatabaseTest(4);
+
             expectedValue = 2;
             actValue = 0;
             contextCalendar.InsertRandomEngineer();
@@ -103,8 +106,8 @@ namespace BAU.LogicTests
             ConnectionTools.initializeDatabaseTest(1);
             expectedValue = 1;
             contextCalendar.InsertRandomEngineer();
-            IEnumerable<Models.Engineer> list1 = contextCalendar.getBetweenDates(DateTime.Now, DateTime.Now);
-            foreach (Models.Engineer ele in list1)
+            IEnumerable<Models.Calendar> list1 = contextCalendar.getCalendarBetweenDates(DateTime.Now, DateTime.Now);
+            foreach (Models.Calendar ele in list1)
                 actValue += 1;
             Assert.AreEqual(expectedValue, actValue);
 
@@ -114,8 +117,8 @@ namespace BAU.LogicTests
             contextCalendar.InsertRandomEngineer();
             contextCalendar.InsertRandomEngineer();
             contextCalendar.InsertRandomEngineer();
-            IEnumerable<Models.Engineer> list2 = contextCalendar.getBetweenDates(DateTime.Now, DateTime.Now);
-            foreach (Models.Engineer ele in list2)
+            IEnumerable<Models.Calendar> list2 = contextCalendar.getCalendarBetweenDates(DateTime.Now, DateTime.Now);
+            foreach (Models.Calendar ele in list2)
                 actValue += 1;
             Assert.AreEqual(expectedValue, actValue);
 
@@ -127,8 +130,8 @@ namespace BAU.LogicTests
             contextCalendar.InsertRandomEngineer();
             contextCalendar.InsertRandomEngineer();
             contextCalendar.InsertRandomEngineer();
-            IEnumerable<Models.Engineer> list3 = contextCalendar.getBetweenDates(DateTime.Now, DateTime.Now.AddDays(1));
-            foreach (Models.Engineer ele in list3)
+            IEnumerable<Models.Calendar> list3 = contextCalendar.getCalendarBetweenDates(DateTime.Now, DateTime.Now.AddDays(1));
+            foreach (Models.Calendar ele in list3)
                 actValue += 1;
             Assert.AreEqual(expectedValue, actValue);
         }

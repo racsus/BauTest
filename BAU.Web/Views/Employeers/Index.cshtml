@@ -31,7 +31,7 @@
                 $('#updatePanel').prepend($loading);
                 //Ajax call for fetch data from WEB Api
                 $.ajax({
-                    url: 'http://localhost:52057/api/Engineers',
+                    url: 'http://bauapioscar.azurewebsites.net/api/Engineers',
                     type: 'GET',
                     data: { pageNumber: pageNo },
                     dataType: 'json',
@@ -71,7 +71,7 @@
                     }
                 }).done(function () {
                     //remove loading panel after ajax call complete
-                    $loading.remove();
+                    //$loading.remove();
                 });
             }
         });

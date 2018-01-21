@@ -80,7 +80,7 @@ namespace BAU.Data
         /// <param name="dateIni">Specific initial date</param>
         /// /// <param name="dateFin">Specific finish date</param>
         /// <returns></returns>
-        public List<Models.Engineer> getBetweenDates(DateTime dateIni, DateTime dateFin)
+        public List<Models.Engineer> getEngineersBetweenDates(DateTime dateIni, DateTime dateFin)
         {
             List<Models.Engineer> res = new List<Models.Engineer>();
             if (dateIni != null)
@@ -102,6 +102,23 @@ namespace BAU.Data
                     res.Add(element);
                 }
 
+            }
+            return res;
+        }
+
+        public List<Models.Calendar> getCalendarBetweenDates(DateTime dateIni, DateTime dateFin)
+        {
+            List<Models.Calendar> res = new List<Models.Calendar>();
+            if (dateIni != null)
+                dateIni = new DateTime(dateIni.Year, dateIni.Month, dateIni.Day, 0, 0, 0);
+            if (dateFin != null)
+                dateFin = new DateTime(dateFin.Year, dateFin.Month, dateFin.Day, 23, 59, 59);
+
+            using (var context = new ApplicationDbContext())
+            {
+                res = (from cal in context.Calendar.Include("EngineerAssigned")
+                            where cal.Date >= dateIni && cal.Date <= dateFin
+                       select cal).ToList<Models.Calendar>();
             }
             return res;
         }
