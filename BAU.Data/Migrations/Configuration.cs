@@ -25,19 +25,7 @@
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
-
-            // Create stored procedures for pagination
-            //Engineers
-            context.Database.ExecuteSqlCommand(StoredProcedures.Engineers.sp_EngineersPaginationDrop);
-            context.Database.ExecuteSqlCommand(StoredProcedures.Engineers.sp_EngineersPaginationCreate);
-            context.Database.ExecuteSqlCommand(StoredProcedures.Engineers.sp_EngineersPaginationCountDrop);
-            context.Database.ExecuteSqlCommand(StoredProcedures.Engineers.sp_EngineersPaginationCountCreate);
-
-            //Calendars
-            context.Database.ExecuteSqlCommand(StoredProcedures.Calendars.sp_CalendarsPaginationDrop);
-            context.Database.ExecuteSqlCommand(StoredProcedures.Calendars.sp_CalendarsPaginationCreate);
-            context.Database.ExecuteSqlCommand(StoredProcedures.Calendars.sp_CalendarsPaginationCountDrop);
-            context.Database.ExecuteSqlCommand(StoredProcedures.Calendars.sp_CalendarsPaginationCountCreate);
+            context.Database.ExecuteSqlCommand(@"DELETE Engineers");
 
             List<Models.Engineer> engineers = new List<Models.Engineer>
             {

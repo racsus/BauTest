@@ -12,5 +12,16 @@ namespace BAU.Models
         public int Id { get; set; }
         [Required(ErrorMessage = "Sorry! The engineer's name is required! :)")]
         public String Name { get; set; }
+
+        public Engineer(int pId, String pName)
+        {
+            Id = pId;
+            Name = pName;
+        }
+
+        public Engineer()
+        {
+
+        }
     }
 }
