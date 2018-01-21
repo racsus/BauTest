@@ -25,9 +25,9 @@
                             <tbody>
                                 <tr>
                                     <td></td>
-                                    <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                                    <td width="438" height="582" class="the_wheel" align="center" valign="middle">
                                         <canvas id="canvas" width="434" height="434">
-                                            <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                                            Sorry, your browser doesn't support canvas. Please try another.
                                         </canvas>
                                     </td>
                                 </tr>
@@ -60,8 +60,8 @@
     <script>
         var currentPage = 1;
 
-        function refreshGrid() {
-            var pageNo = parseInt($(this).html());
+        function refreshGrid(pageNo) {
+            //var pageNo = parseInt($(this).html());
             currentPage = pageNo;
             fetchData(currentPage);
         }
@@ -105,7 +105,7 @@
                     if (totalPage > 0) {
                         for (var i = 1; i <= totalPage; i++) {
                             var $page = $('<span/>').addClass((i == currentPage) ? "current" : "");
-                            $page.html((i == currentPage) ? i : "<a href='#'>" + i + "</a>");
+                            $page.html((i == currentPage) ? i : "<a href='#' onclick='javascript:refreshGrid(" + i + ")'>" + i + "</a>");
                             $footerTD.append($page);
                         }
                         $footer.append($footerTD);
@@ -127,11 +127,11 @@
             //Load data for page 1 first time
             fetchData(1);
 
-            // Paging
-            $('#updatePanel').on('click', '.footerContent a', function (e) {
-                e.preventDefault();
-                refreshGrid();
-            });
+            //// Paging
+            //$('#updatePanel').on('click', '.footerContent a', function (e) {
+            //    e.preventDefault();
+            //    refreshGrid();
+            //});
         });
         
 
